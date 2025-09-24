@@ -127,6 +127,11 @@ export default function AppNavigator() {
           component={NutritionScreen}
           options={{ title: 'Nutrición' }}
         />
+         {/* <Tab.Screen 
+          name="Camera" 
+          component={CameraScreen}
+          options={{ title: 'Cámara' }}
+        /> */}
         <Tab.Screen 
           name="Workout" 
           component={WorkoutScreen}

@@ -4,11 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 
 export default function ProfileScreen() {
   const profileData = {
-    name: 'Ana García',
-    age: 28,
-    weight: '65 kg',
-    height: '1.68 m',
-    goal: 'Tonificar músculos',
+    name: 'Josue Flores',
+    age: 26,
+    weight: '94 kg',
+    height: '1.78 m',
+    goal: 'Déficit calórico',
   };
 
   const achievements = [
@@ -25,7 +25,7 @@ export default function ProfileScreen() {
         
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>AG</Text>
+            <Text style={styles.avatarText}>JF</Text>
           </View>
           <Text style={styles.name}>{profileData.name}</Text>
           <Text style={styles.goal}>{profileData.goal}</Text>
