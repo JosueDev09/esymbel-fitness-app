@@ -423,12 +423,9 @@ export default function HomeScreen() {
               </View>
 
               {/* Grasas Semanales */}
-              <View style={styles.macroProgressRow}>
-                <View style={styles.macroInfo}>
+             <View style={styles.circularMacroItem}>
                   <Text style={styles.macroIcon}>🥑</Text>
-                
-                </View>
-                 <AnimatedCircularProgress
+                  <AnimatedCircularProgress
                     size={60}
                     width={4}
                     fill={Math.min(dailyMacros.fats, 100)}
@@ -442,7 +439,8 @@ export default function HomeScreen() {
                       <Text style={styles.circularProgressText}>{Math.round(dailyMacros.fats)}%</Text>
                     )}
                   </AnimatedCircularProgress>
-              </View>
+                  <Text style={styles.circularMacroLabel}>Grasas</Text>
+                </View>
             </View>
           </View>
         </View>

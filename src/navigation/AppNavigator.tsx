@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 // Importar las pantallas
-import { HomeScreen, NutritionScreen, WorkoutScreen, ProfileScreen } from '../screens';
+import { HomeScreen, NutrientSearchScreen, RecipesScreen, WorkoutScreen, ProfileScreen } from '../screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,23 +18,22 @@ const HomeIcon = ({ focused }: { focused: boolean }) => (
   </View>
 );
 
-// Componente personalizado para el icono de Nutrición
+// Componente personalizado para el icono de Búsqueda de Nutrientes
 const NutritionIcon = ({ focused }: { focused: boolean }) => (
   <View style={[styles.iconContainer, focused && styles.focusedIcon]}>
-    <View style={styles.appleIcon}>
-      <View style={styles.appleBody} />
-      <View style={styles.appleLeaf} />
+    <View style={styles.searchIcon}>
+      <View style={styles.searchCircle} />
+      <View style={styles.searchHandle} />
     </View>
   </View>
 );
 
-// Componente personalizado para el icono de Entrenamientos
-const WorkoutIcon = ({ focused }: { focused: boolean }) => (
+// Componente personalizado para el icono de Recetas
+const RecipesIcon = ({ focused }: { focused: boolean }) => (
   <View style={[styles.iconContainer, focused && styles.focusedIcon]}>
-    <View style={styles.dumbbellIcon}>
-      <View style={styles.dumbbellWeight1} />
-      <View style={styles.dumbbellBar} />
-      <View style={styles.dumbbellWeight2} />
+    <View style={styles.chefIcon}>
+      <View style={styles.chefHat} />
+      <View style={styles.chefFace} />
     </View>
   </View>
 );
@@ -79,8 +78,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             case 'Nutrition':
               IconComponent = <NutritionIcon focused={isFocused} />;
               break;
-            case 'Workout':
-              IconComponent = <WorkoutIcon focused={isFocused} />;
+            case 'Recipes':
+              IconComponent = <RecipesIcon focused={isFocused} />;
               break;
             case 'Profile':
               IconComponent = <ProfileIcon focused={isFocused} />;
@@ -124,8 +123,8 @@ export default function AppNavigator() {
         />
         <Tab.Screen 
           name="Nutrition" 
-          component={NutritionScreen}
-          options={{ title: 'Nutrición' }}
+          component={NutrientSearchScreen}
+          options={{ title: 'Nutrientes' }}
         />
          {/* <Tab.Screen 
           name="Camera" 
@@ -133,9 +132,9 @@ export default function AppNavigator() {
           options={{ title: 'Cámara' }}
         /> */}
         <Tab.Screen 
-          name="Workout" 
-          component={WorkoutScreen}
-          options={{ title: 'Entrenamientos' }}
+          name="Recipes" 
+          component={RecipesScreen}
+          options={{ title: 'Recetas' }}
         />
         <Tab.Screen 
           name="Profile" 
@@ -237,25 +236,28 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   
-  // Icono Apple (reutilizado pero más pequeño)
-  appleIcon: {
+  // Icono de Búsqueda
+  searchIcon: {
     position: 'relative',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  appleBody: {
-    width: 14,
-    height: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 8,
+  searchCircle: {
+    width: 12,
+    height: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 6,
+    backgroundColor: 'transparent',
   },
-  appleLeaf: {
+  searchHandle: {
     position: 'absolute',
-    top: -1,
-    right: 4,
-    width: 6,
-    height: 3,
+    bottom: -4,
+    right: -4,
+    width: 8,
+    height: 2,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 3,
+    borderRadius: 1,
     transform: [{ rotate: '45deg' }],
   },
   
@@ -300,5 +302,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderTopLeftRadius: 7,
     borderTopRightRadius: 7,
+  },
+  
+  // Icono Chef (para recetas)
+  chefIcon: {
+    alignItems: 'center',
+  },
+  chefHat: {
+    width: 16,
+    height: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    marginBottom: 1,
+  },
+  chefFace: {
+    width: 12,
+    height: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 6,
   },
 });
