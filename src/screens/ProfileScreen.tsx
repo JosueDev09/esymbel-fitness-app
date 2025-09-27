@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }: { navigation: any }) {
   const profileData = {
     name: 'Josue Flores',
     age: 26,
@@ -16,6 +17,37 @@ export default function ProfileScreen() {
     { icon: '🔥', title: 'Racha de 5 días', description: '5 días consecutivos entrenando' },
     { icon: '💪', title: 'Objetivo alcanzado', description: 'Meta mensual completada' },
   ];
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Cerrar Sesión',
+      '¿Estás seguro de que quieres cerrar sesión?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Cerrar Sesión',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem('isLoggedIn');
+              await AsyncStorage.removeItem('userEmail');
+              
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'LoginScreen' }],
+              });
+            } catch (error) {
+              console.error('Error logging out:', error);
+              Alert.alert('Error', 'Hubo un problema al cerrar sesión');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -77,6 +109,10 @@ export default function ProfileScreen() {
             <Text style={styles.optionText}>📱 Compartir Progreso</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>🚪 Cerrar Sesión</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -201,5 +237,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     fontFamily: 'Inter_400Regular',
+  },
+  logoutButton: {
+    backgroundColor: '#dc3545',
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 24,
+    marginBottom: 100, // Espacio para evitar que se empalme con el menú
+  },
+  logoutText: {
+    fontSize: 16,
+    color: 'white',
+    fontFamily: 'Inter_400Regular',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
