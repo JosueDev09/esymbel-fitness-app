@@ -58,10 +58,15 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
 
       const data = await response.json();
       console.log('Respuesta del backend:', data);
+      console.log('Código de estado:', response.status);
 
       if (response.ok) {
         // Login exitoso
         console.log('Login exitoso para:', data.user?.email || email);
+        console.log('Datos completos recibidos:', JSON.stringify(data, null, 2));
+        console.log('¿Existe data.user?', !!data.user);
+        console.log('Tipo de data.user:', typeof data.user);
+        console.log('data.user:', data.user);
         
         // Guardar datos del usuario y token
         await AsyncStorage.multiSet([
@@ -71,16 +76,72 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
           ['userData', JSON.stringify(data.user || {})],
         ]);
 
-        Alert.alert(
-          'Bienvenido!',
-          `Hola ${data.user?.firstName || 'Usuario'}! Has iniciado sesión exitosamente.`,
-          [
-            {
+        // Verificar diferentes estructuras de respuesta
+        console.log('🔍 Verificando condiciones...');
+        console.log('Condición 1 - data.user existe:', !!data.user);
+        console.log('Condición 2 - data.access_token existe:', !!data.access_token);
+        console.log('Valor de data.access_token:', data.access_token);
+        
+        if (data.user) {
+          console.log('✅ ENTRANDO EN: Encontró data.user');
+          
+          // Debug del nombre del usuario
+          const userName = data.user?.firstName || data.user?.name || 'Usuario';
+          console.log('🔍 Nombre del usuario para el Alert:', userName);
+          console.log('🔍 data.user.firstName:', data.user?.firstName);
+          console.log('🔍 data.user.name:', data.user?.name);
+          
+          console.log('🚨 EJECUTANDO Alert.alert...');
+          
+          try {
+            // Probar primero con un Alert simple
+            Alert.alert('Test', 'Alert funciona');
+
+            
+            navigation.replace('HomeScreen');
+            // Luego el Alert completo
+            // setTimeout(() => {
+            //   Alert.alert(
+            //     'Bienvenido!',
+            //     `Hola ${userName}! Has iniciado sesión exitosamente.`,
+            //     [{
+            //       text: 'Continuar',
+            //       onPress: () => {
+            //         console.log('🔄 Usuario presionó Continuar, navegando...');
+            //         navigation.replace('HomeScreen');
+            //       }
+            //     }]
+            //   );
+            // }, 1000);
+            
+            console.log('✅ Alert.alert ejecutado correctamente');
+          } catch (alertError) {
+            console.error('❌ Error ejecutando Alert.alert:', alertError);
+            // Alert alternativo en caso de error
+            navigation.replace('HomeScreen');
+          }
+        } else if (data.access_token) {
+          console.log('✅ ENTRANDO EN: Encontró access_token pero no user');
+          Alert.alert(
+            'Bienvenido!',
+            `Has iniciado sesión exitosamente.`,
+            [{
               text: 'Continuar',
               onPress: () => navigation.replace('HomeScreen')
-            }
-          ]
-        );
+            }]
+          );
+        } else {
+          console.log('⚠️ ENTRANDO EN: Estructura de respuesta inesperada');
+          console.log('Intentando mostrar alert por defecto...');
+          Alert.alert(
+            'Login exitoso',
+            'Has iniciado sesión, pero no se pudieron obtener todos los datos del usuario.',
+            [{
+              text: 'Continuar',
+              onPress: () => navigation.replace('HomeScreen')
+            }]
+          );
+        }
 
       } else {
         // Error del servidor
