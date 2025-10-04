@@ -39,8 +39,8 @@ export default function HomeScreen() {
           </View>
           
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>Josue</Text>
-            <Text style={styles.userType}>Administrador</Text>
+            <Text style={styles.userName}>Sophia</Text>
+            <Text style={styles.userType}>Premium Member</Text>
           </View>
         </View>
         
@@ -201,7 +201,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A', // background-dark
+    backgroundColor: '#122017', // background-dark
   },
   
   // Header
