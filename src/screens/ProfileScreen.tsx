@@ -1,34 +1,39 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Switch, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ProfileScreen({ navigation }: { navigation: any }) {
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
   const profileData = {
-    name: 'Josue Flores',
-    age: 26,
-    weight: '94 kg',
-    height: '1.78 m',
-    goal: 'Déficit calórico',
+    name: 'Ethan Carter',
+    username: '@ethan.carter',
+    bio: 'Fitness Enthusiast',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCbLssUiHMdVhWgJwrQbbXwoWJOl1COE7thOdKadewOiuz3CJYRWSKIo86eW3ZGfrmedFE8VEF8RWiVLmq8rnrIMv2TrVc5Xln2iaLGgjENTfG1KGZM5Q4-NgoYTHT0Ew8PKq4Re_6Gi2UvnxXC8HNshPtRIlwS2q_wygNy2VzoD6kpHZieCvoYHawLelBbS8JvcWLl-IJEJoqhbL3MgjxpMi_PEKeabiaV2geBxfGo13lgE9HRaef-Hh72sFI0aPo2Pvvs63h5gkeF'
   };
 
-  const achievements = [
-    { icon: '🏆', title: 'Primera semana', description: 'Completaste tu primera semana' },
-    { icon: '🔥', title: 'Racha de 5 días', description: '5 días consecutivos entrenando' },
-    { icon: '💪', title: 'Objetivo alcanzado', description: 'Meta mensual completada' },
+  const personalStats = [
+    { label: 'Weight', value: '75 kg' },
+    { label: 'Height', value: '180 cm' },
+    { label: 'BMI', value: '23.1' },
+    { label: 'Age', value: '28' },
+    { label: 'Gender', value: 'Male' },
+    { label: 'Goal', value: 'Maintain' },
   ];
 
   const handleLogout = () => {
     Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro de que quieres cerrar sesión?',
+      'Log Out',
+      'Are you sure you want to log out?',
       [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Cerrar Sesión',
+          text: 'Log Out',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -41,7 +46,7 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
               });
             } catch (error) {
               console.error('Error logging out:', error);
-              Alert.alert('Error', 'Hubo un problema al cerrar sesión');
+              Alert.alert('Error', 'There was a problem logging out');
             }
           },
         },
@@ -50,206 +55,289 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Mi Perfil 👤</Text>
-        
-        <View style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>JF</Text>
-          </View>
-          <Text style={styles.name}>{profileData.name}</Text>
-          <Text style={styles.goal}>{profileData.goal}</Text>
-        </View>
-
-        <View style={styles.statsGrid}>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Edad</Text>
-            <Text style={styles.statValue}>{profileData.age} años</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Peso</Text>
-            <Text style={styles.statValue}>{profileData.weight}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Altura</Text>
-            <Text style={styles.statValue}>{profileData.height}</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statLabel}>IMC</Text>
-            <Text style={styles.statValue}>23.0</Text>
-          </View>
-        </View>
-
-        <Text style={styles.sectionTitle}>Logros Recientes</Text>
-        <View style={styles.achievementsContainer}>
-          {achievements.map((achievement, index) => (
-            <View key={index} style={styles.achievementCard}>
-              <Text style={styles.achievementIcon}>{achievement.icon}</Text>
-              <View style={styles.achievementContent}>
-                <Text style={styles.achievementTitle}>{achievement.title}</Text>
-                <Text style={styles.achievementDescription}>{achievement.description}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionButton}>
-            <Text style={styles.optionText}>⚙️ Configuración</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
-            <Text style={styles.optionText}>📊 Estadísticas Detalladas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
-            <Text style={styles.optionText}>🎯 Cambiar Objetivos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
-            <Text style={styles.optionText}>📱 Compartir Progreso</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>🚪 Cerrar Sesión</Text>
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
+        <Text style={styles.headerTitle}>Profile</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Profile Section */}
+        <View style={styles.profileSection}>
+          <View style={styles.avatarContainer}>
+            <Image 
+              source={{ uri: profileData.avatar }}
+              style={styles.avatar}
+              resizeMode="cover"
+            />
+          </View>
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{profileData.name}</Text>
+            <Text style={styles.username}>{profileData.username}</Text>
+            <Text style={styles.userBio}>{profileData.bio}</Text>
+          </View>
+        </View>
+
+        {/* Personal Stats */}
+        <View style={styles.statsSection}>
+          <Text style={styles.sectionTitle}>Personal Stats</Text>
+          <View style={styles.statsGrid}>
+            {personalStats.map((stat, index) => (
+              <View key={index} style={[styles.statItem, index % 2 === 0 ? styles.statItemLeft : styles.statItemRight]}>
+                <Text style={styles.statLabel}>{stat.label}</Text>
+                <Text style={styles.statValue}>{stat.value}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Share Progress Button */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.shareButton}>
+            <Text style={styles.shareButtonText}>Share Progress</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* App Preferences */}
+        <View style={styles.preferencesSection}>
+          <Text style={styles.sectionTitle}>App Preferences</Text>
+          
+          {/* Notifications */}
+          <View style={styles.preferenceItem}>
+            <View style={styles.preferenceContent}>
+              <View style={styles.preferenceIconContainer}>
+                <Ionicons name="notifications" size={24} color="white" />
+              </View>
+              <Text style={styles.preferenceText}>Notifications</Text>
+            </View>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={setNotificationsEnabled}
+              trackColor={{ false: '#20314b', true: '#001433' }}
+              thumbColor="white"
+              ios_backgroundColor="#20314b"
+            />
+          </View>
+
+          {/* Units of Measurement */}
+          <View style={styles.preferenceItem}>
+            <View style={styles.preferenceContent}>
+              <View style={styles.preferenceIconContainer}>
+                <Ionicons name="resize" size={24} color="white" />
+              </View>
+              <Text style={styles.preferenceText}>Units of Measurement</Text>
+            </View>
+            <Text style={styles.preferenceValue}>Metric</Text>
+          </View>
+        </View>
+
+        {/* Logout Button */}
+        <View style={styles.logoutContainer}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Log Out</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#0f1724', // Exact color from HTML
   },
-  content: {
-    padding: 20,
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 28,
-    color: 'white',
-    fontFamily: 'Poppins_700Bold',
-    marginBottom: 30,
-  },
-  profileCard: {
-    backgroundColor: '#1E293B',
-    padding: 30,
-    borderRadius: 16,
+  
+  // Header
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
+    justifyContent: 'space-between',
+    backgroundColor: '#0f1724',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#3B82F6',
+  backButton: {
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
   },
-  avatarText: {
-    fontSize: 28,
-    color: 'white',
-    fontFamily: 'Poppins_700Bold',
-  },
-  name: {
-    fontSize: 24,
-    color: 'white',
-    fontFamily: 'Poppins_700Bold',
-    marginBottom: 8,
-  },
-  goal: {
-    fontSize: 16,
-    color: '#10B981',
-    fontFamily: 'Inter_400Regular',
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-  },
-  statItem: {
-    backgroundColor: '#1E293B',
-    width: '48%',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#94A3B8',
-    fontFamily: 'Inter_400Regular',
-    marginBottom: 4,
-  },
-  statValue: {
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
     fontSize: 18,
+    fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'Poppins_700Bold',
+    paddingRight: 48, // Balance the back button
   },
-  sectionTitle: {
-    fontSize: 20,
-    color: 'white',
-    fontFamily: 'Poppins_700Bold',
-    marginBottom: 20,
+  headerSpacer: {
+    width: 48,
   },
-  achievementsContainer: {
-    marginBottom: 30,
-  },
-  achievementCard: {
-    backgroundColor: '#1E293B',
-    flexDirection: 'row',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    alignItems: 'center',
-  },
-  achievementIcon: {
-    fontSize: 32,
-    marginRight: 16,
-  },
-  achievementContent: {
+  
+  // ScrollView
+  scrollView: {
     flex: 1,
   },
-  achievementTitle: {
-    fontSize: 16,
+  
+  // Profile Section
+  profileSection: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    alignItems: 'center',
+    gap: 16,
+  },
+  avatarContainer: {
+    gap: 16,
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 128,
+    height: 128,
+    borderRadius: 64,
+  },
+  userInfo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userName: {
+    fontSize: 22,
+    fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'Poppins_700Bold',
+    textAlign: 'center',
     marginBottom: 4,
   },
-  achievementDescription: {
+  username: {
+    fontSize: 16,
+    color: '#8da7ce',
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  userBio: {
+    fontSize: 16,
+    color: '#8da7ce',
+    textAlign: 'center',
+  },
+  
+  // Stats Section
+  statsSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingBottom: 8,
+    paddingTop: 16,
+  },
+  statsGrid: {
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  statItem: {
+    width: '50%',
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#2e466b',
+    gap: 4,
+  },
+  statItemLeft: {
+    paddingRight: 8,
+  },
+  statItemRight: {
+    paddingLeft: 8,
+  },
+  statLabel: {
     fontSize: 14,
-    color: '#94A3B8',
-    fontFamily: 'Inter_400Regular',
+    color: '#8da7ce',
   },
-  optionsContainer: {
-    gap: 12,
+  statValue: {
+    fontSize: 14,
+    color: 'white',
   },
-  optionButton: {
-    backgroundColor: '#1E293B',
-    padding: 16,
-    borderRadius: 12,
+  
+  // Share Button
+  buttonContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  optionText: {
+  shareButton: {
+    backgroundColor: '#001433',
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  shareButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  
+  // Preferences Section
+  preferencesSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  preferenceItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#0f1724',
+    paddingHorizontal: 16,
+    minHeight: 56,
+    gap: 16,
+  },
+  preferenceContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    flex: 1,
+  },
+  preferenceIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: '#20314b',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  preferenceText: {
     fontSize: 16,
     color: 'white',
-    fontFamily: 'Inter_400Regular',
+    flex: 1,
+  },
+  preferenceValue: {
+    fontSize: 16,
+    color: 'white',
+  },
+  
+  // Logout Section
+  logoutContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 100, // Space for navigation
   },
   logoutButton: {
-    backgroundColor: '#dc3545',
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 24,
-    marginBottom: 100, // Espacio para evitar que se empalme con el menú
+    backgroundColor: '#001433',
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
   },
-  logoutText: {
-    fontSize: 16,
+  logoutButtonText: {
     color: 'white',
-    fontFamily: 'Inter_400Regular',
-    textAlign: 'center',
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });
