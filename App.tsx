@@ -8,10 +8,20 @@ import SplashScreen from './src/screens/SplashScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-import { RecipesScreen, WorkoutScreen } from './src/screens';
+import { CaptureIAScreen, RecipesScreen, WorkoutScreen } from './src/screens';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Stack Navigator para HomeTab (incluye CaptureIAScreen)
+function HomeStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeMain" component={HomeScreen} />
+      <Stack.Screen name="CaptureIAScreen" component={CaptureIAScreen} />
+    </Stack.Navigator>
+  );
+}
 
 // Tab Navigator para las pantallas principales
 function MainTabs() {
@@ -37,7 +47,7 @@ function MainTabs() {
     >
       <Tab.Screen 
         name="HomeTab" 
-        component={HomeScreen}
+        component={HomeStackNavigator}
         options={{
           tabBarLabel: 'Inicio',
           tabBarIcon: ({ color, focused, size }) => (
@@ -91,6 +101,8 @@ function MainTabs() {
           ),
         }}
       />
+
+
     </Tab.Navigator>
   );
 }

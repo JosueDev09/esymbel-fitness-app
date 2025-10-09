@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Switch, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Switch, SafeAreaView, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfileScreen({ navigation }: { navigation: any }) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
 
   const profileData = {
     name: 'Ethan Carter',
@@ -99,7 +100,10 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
 
         {/* Share Progress Button */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.shareButton}>
+          <TouchableOpacity 
+            style={styles.shareButton}
+            onPress={() => setShareModalVisible(true)}
+          >
             <Text style={styles.shareButtonText}>Share Progress</Text>
           </TouchableOpacity>
         </View>
@@ -144,6 +148,66 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Share Progress Modal */}
+      <Modal
+        visible={shareModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShareModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            {/* Modal Handle */}
+            <View style={styles.modalHandle} />
+            
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Compartir Progreso</Text>
+            </View>
+            
+            {/* Share Options */}
+            <View style={styles.shareOptions}>
+              {/* Macro Progress */}
+              <TouchableOpacity style={styles.shareOption}>
+                <View style={styles.shareIconContainer}>
+                  <MaterialIcons name="pie-chart" size={24} color="white" />
+                </View>
+                <Text style={styles.shareOptionText}>Progreso de Macros</Text>
+              </TouchableOpacity>
+
+              {/* Workout Stats */}
+              <TouchableOpacity style={styles.shareOption}>
+                <View style={styles.shareIconContainer}>
+                  <MaterialIcons name="fitness-center" size={24} color="white" />
+                </View>
+                <Text style={styles.shareOptionText}>Estadísticas de Entrenamiento</Text>
+              </TouchableOpacity>
+
+              {/* Active Days Streak */}
+              <TouchableOpacity style={styles.shareOption}>
+                <View style={styles.shareIconContainer}>
+                  <MaterialIcons name="local-fire-department" size={24} color="white" />
+                </View>
+                <Text style={styles.shareOptionText}>Racha de Días Activos</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Close Button */}
+            <View style={styles.modalFooter}>
+              <TouchableOpacity 
+                style={styles.modalCloseButton}
+                onPress={() => setShareModalVisible(false)}
+              >
+                <Text style={styles.modalCloseButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Bottom Spacing */}
+            <View style={styles.modalBottomSpacing} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -339,5 +403,80 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  
+  // Share Progress Modal
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  modalContainer: {
+    backgroundColor: '#0f1723', // background-dark
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 12,
+  },
+  modalHandle: {
+    width: 40,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(0, 20, 51, 0.5)', // primary/50
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  modalHeader: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  shareOptions: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  shareOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: 'rgba(0, 20, 51, 0.3)', // primary/30
+    padding: 16,
+    borderRadius: 8,
+  },
+  shareIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: '#001433', // primary
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shareOptionText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'white',
+  },
+  modalFooter: {
+    padding: 16,
+    paddingTop: 24,
+  },
+  modalCloseButton: {
+    height: 48,
+    backgroundColor: '#001433', // primary
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalCloseButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalBottomSpacing: {
+    height: 20,
   },
 });

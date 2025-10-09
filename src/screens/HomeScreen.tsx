@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: { navigation: any }) {
   const [selectedPeriod, setSelectedPeriod] = useState('Semanal');
 
   // Datos de ejemplo para los macronutrientes
@@ -23,11 +23,11 @@ export default function HomeScreen() {
         <View style={styles.headerSpacer} />
         <Text style={styles.headerTitle}>Panel de Control</Text>
         <TouchableOpacity style={styles.settingsButton}>
-          <Ionicons name="settings" size={24} color="white" />
+          <MaterialIcons name="settings" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.main} showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.streakCard}>
@@ -150,11 +150,45 @@ export default function HomeScreen() {
           </Text>
         </View>
 
+        {/* Quick Tools Section */}
+        <View style={styles.quickToolsSection}>
+          <Text style={styles.sectionTitle}>Herramientas Rápidas</Text>
+          
+          <View style={styles.toolsGrid}>
+            <TouchableOpacity style={styles.toolCard}>
+              <Image 
+                source={{ 
+                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Tpg4xibhmNI-NIbQ_oQ6uu4jDo5GxmEpa6Vd1xFi9ZqXrS7-qxJjxFESkQ-q_H6BtonqkSvbjqRvZBstfNGALuKbm8UTdr9GShOejeSF2tp-Z8Mj1SCDMRfyieBWsOaeuuVEDVTvrylxAKTjOiLCKRYLpq-mWOT_bY1JRF-zVVlH4M7grq4mfylKGfkSoLUI_xGiN9_v8xExnhXaMc7QSp-YVOy-IhvnBTv-6QrcMTMDkm141Z26qS0qWB3FHqI6avyri3ckSR6'
+                }}
+                style={styles.cardBackgroundImage}
+                alt="Balanza y alimentos"
+              />
+              <View style={styles.cardOverlay} />
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>Calculadora de Macros</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.toolCard} onPress={() => navigation.navigate('CaptureIAScreen')}>
+              <Image 
+                source={{ 
+                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbQC6ZaCKzsY1YT2-hwAZYFV80GX5iDcwpIVGb4yx0S9VU43dtBFw8-NkXu41SMTqU8lgjjvj0UubSUjCcBfIfcmF2D5hjix3XMDJjIq7OFwq7ugJJXoJnX4TwEOQjPfHFq0TXZcSuRHsLbBAeTb-Q7KQzEGuxKkfkLAXq4lswUA_ikZe6_9ljbwsswtEEUG64jkpzjQNQ639iWepimhREhA9KoCBklbfZdq-7BqPlvo3UnoWcLJkEEldmo6TRlSZr6wNVuuLgu0ST'
+                }}
+                style={styles.cardBackgroundImage}
+                alt="Cámara registrando comida"
+              />
+              <View style={styles.cardOverlay} />
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>Registro con IA</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* Recent Activity Section */}
         <View style={styles.activitySection}>
           <Text style={styles.sectionTitle}>Actividad Reciente</Text>
           
-          {/* Activity Items */}
           <View style={styles.activityList}>
             <View style={styles.activityItem}>
               <View style={styles.activityIcon}>
@@ -178,22 +212,11 @@ export default function HomeScreen() {
               <Text style={styles.activityTime}>Hace 4h</Text>
             </View>
           </View>
-
-          {/* Weekly Progress Chart */}
-          <View style={styles.progressChart}>
-            <Text style={styles.chartTitle}>Progreso Semanal</Text>
-            <View style={styles.chartContainer}>
-              <Image 
-                source={{ 
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD1tTjOUGWaAWBDw7kfGKBQdxOn66oeR6gPu-mVmmNnMni-xqohePYUoZ4OarZuIZAzjp3Pe7yerCQdxaEX4c6IS4fi4asZA1XyRxbWVOCXQ7E8N-lpn9pUGdXhpAyroDEAIzTYo79xpJQ-QFbElyIZN61JDDP-UMLhbzQhQEVWueeR5iRcTz3COXXMt4EuCW-JDVNxgZT7uK4zIo0rJE5hoVXvYQ-EPuzPnhvSvy3_8xhOj3-lcNcLPov5aSvEbwt4MDfViIhfmzIg'
-                }}
-                style={styles.chartImage}
-                resizeMode="cover"
-              />
-            </View>
-          </View>
         </View>
       </ScrollView>
+
+      {/* Bottom Navigation */}
+     
     </SafeAreaView>
   );
 }
@@ -201,7 +224,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A', // background-dark
+    backgroundColor: '#0F172A', // background-dark from HTML
   },
   
   // Header
@@ -228,18 +251,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 24,
+    backgroundColor: 'rgba(56, 224, 123, 0.2)',
   },
   
-  // ScrollView
-  scrollView: {
+  // Main ScrollView
+  main: {
     flex: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   
   // Hero Section
   heroSection: {
     alignItems: 'center',
     paddingVertical: 16,
-    paddingHorizontal: 16,
     gap: 16,
   },
   streakCard: {
@@ -279,7 +304,6 @@ const styles = StyleSheet.create({
   
   // Weekly Goals Section
   weeklyGoalsSection: {
-    paddingHorizontal: 16,
     paddingVertical: 20,
     gap: 16,
   },
@@ -357,9 +381,65 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   
+  // Quick Tools Section
+  quickToolsSection: {
+    paddingVertical: 20,
+    gap: 16,
+  },
+  toolsGrid: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  toolCard: {
+    flex: 1,
+    aspectRatio: 1, // aspect-square
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+    elevation: 2, // shadow-sm
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  cardBackgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0.2,
+  },
+  cardOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  cardContent: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    justifyContent: 'flex-end',
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white'
+  },
+  
   // Activity Section
   activitySection: {
-    paddingHorizontal: 16,
     paddingVertical: 20,
     gap: 16,
   },
@@ -401,27 +481,33 @@ const styles = StyleSheet.create({
     color: '#38e07b',
   },
   
-  // Progress Chart
-  progressChart: {
-    backgroundColor: 'rgba(56, 224, 123, 0.2)',
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 16,
+  // Bottom Navigation
+  bottomNav: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(242, 246, 245, 0.8)', // background-light with transparency
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(56, 224, 123, 0.2)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
   },
-  chartTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 8,
+  navItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    paddingVertical: 4,
+    borderRadius: 24,
   },
-  chartContainer: {
-    height: 160,
-    borderRadius: 8,
-    backgroundColor: 'rgba(56, 224, 123, 0.3)',
-    overflow: 'hidden',
+  navItemActive: {
+    backgroundColor: 'rgba(56, 224, 123, 0.1)',
   },
-  chartImage: {
-    width: '100%',
-    height: '100%',
+  navText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: 'rgba(255, 255, 255, 0.6)',
+  },
+  navTextActive: {
+    color: '#38e07b',
   },
 });

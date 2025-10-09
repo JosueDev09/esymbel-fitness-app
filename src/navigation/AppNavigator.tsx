@@ -1,12 +1,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 // Importar las pantallas
-import { HomeScreen, NutrientSearchScreen, RecipesScreen, WorkoutScreen, ProfileScreen } from '../screens';
+import { HomeScreen, NutrientSearchScreen, RecipesScreen, WorkoutScreen, ProfileScreen, CaptureIAScreen } from '../screens';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 // Componente personalizado para el icono de Home
 const HomeIcon = ({ focused }: { focused: boolean }) => (
@@ -107,41 +109,62 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   );
 };
 
+// Tab Navigator Component
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen}
+        options={{ title: 'Inicio' }}
+      />
+      <Tab.Screen 
+        name="Nutrition" 
+        component={NutrientSearchScreen}
+        options={{ title: 'Nutrientes' }}
+      />
+       {/* <Tab.Screen 
+        name="Camera" 
+        component={CameraScreen}
+        options={{ title: 'Cámara' }}
+      /> */}
+      <Tab.Screen 
+        name="Recipes" 
+        component={RecipesScreen}
+        options={{ title: 'Recetas' }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileScreen}
+        options={{ title: 'Perfil' }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+// Main App Navigator with Stack
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        tabBar={(props) => <CustomTabBar {...props} />}
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
       >
-        <Tab.Screen 
-          name="Home" 
-          component={HomeScreen}
-          options={{ title: 'Inicio' }}
+        <Stack.Screen 
+          name="MainTabs" 
+          component={TabNavigator}
         />
-        <Tab.Screen 
-          name="Nutrition" 
-          component={NutrientSearchScreen}
-          options={{ title: 'Nutrientes' }}
+        <Stack.Screen 
+          name="CaptureIAScreen" 
+          component={CaptureIAScreen}
         />
-         {/* <Tab.Screen 
-          name="Camera" 
-          component={CameraScreen}
-          options={{ title: 'Cámara' }}
-        /> */}
-        <Tab.Screen 
-          name="Recipes" 
-          component={RecipesScreen}
-          options={{ title: 'Recetas' }}
-        />
-        <Tab.Screen 
-          name="Profile" 
-          component={ProfileScreen}
-          options={{ title: 'Perfil' }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
